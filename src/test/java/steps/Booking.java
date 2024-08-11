@@ -31,7 +31,7 @@ public class Booking {
         bookingDetails.put("additionalneeds", "No additional need :)");
     }
 
-    @When("I send the POST request")
+    @When("I send the booking POST request")
     public void iSendAPostRequestToTheBookingEndpoint() {
         response = RestAssured.given()
                 .contentType("application/json")
