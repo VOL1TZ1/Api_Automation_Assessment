@@ -10,7 +10,7 @@ import org.testng.Assert;
 public class AuthToken {
 
     private Response response;
-    String requestBody;
+    private String requestBody;
 
     @Given("I have a valid username and password")
     public void iHaveAValidUsernameAndPassword() {
@@ -22,7 +22,7 @@ public class AuthToken {
     }
 
     @When("I send the POST request")
-    public void iSendAPostRequestToTheAuthEndpoint() {
+    public void iSendAPostRequest() {
 
         response = RestAssured.given()
                 .contentType("application/json")
@@ -32,9 +32,9 @@ public class AuthToken {
     }
 
     @Then("I should receive a token")
-    public void iShouldReceiveAValidTokenInTheResponse() {
+    public void iShouldReceiveAToken() {
         String token = response.jsonPath().getString("token");
-        Assert.assertFalse(token.isEmpty(), "the token is not empty");
+        Assert.assertFalse(token.isEmpty());
         System.out.println("The Generated Token is: {" + token + "}");
     }
 }

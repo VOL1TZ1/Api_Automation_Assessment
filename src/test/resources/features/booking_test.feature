@@ -9,4 +9,9 @@ Feature: Booking API Tests
     Given I have valid booking details
     When I send the booking POST request
     Then The booking should be added
-    And the booking details in the response should match the request
+    And the response should match the request
+
+  Scenario: Verify that list of bookings is greater than Zero
+    When I send the booking GET request
+    Then the response should be a list that is greater than zero
+
