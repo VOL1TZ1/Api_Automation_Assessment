@@ -9,8 +9,8 @@ import org.testng.Assert;
 
 public class AuthToken {
 
-    private Response response;
-    private String requestBody;
+    Response response;
+    String requestBody;
 
     @Given("I have a valid username and password")
     public void iHaveAValidUsernameAndPassword() {
@@ -35,6 +35,5 @@ public class AuthToken {
     public void iShouldReceiveAToken() {
         String token = response.jsonPath().getString("token");
         Assert.assertFalse(token.isEmpty());
-        System.out.println("The Generated Token is: {" + token + "}");
     }
 }

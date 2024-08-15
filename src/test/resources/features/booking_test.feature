@@ -13,5 +13,5 @@ Feature: Booking API Tests
 
   Scenario: Verify that list of bookings is greater than Zero
     When I send the booking GET request
-    Then the response should be a list that is greater than zero
+    Then The response should be a list that is greater than zero in size
 

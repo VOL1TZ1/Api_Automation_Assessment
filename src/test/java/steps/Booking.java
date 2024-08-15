@@ -12,8 +12,8 @@ import java.util.Map;
 
 public class Booking {
 
-    private Response response;
-    private Map<String, Object> requestDetails;
+    Response response;
+    Map<String, Object> requestDetails;
 
     @Given("I have valid booking details")
     public void iHaveValidBookingDetails() {
