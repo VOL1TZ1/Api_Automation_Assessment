@@ -1,5 +1,7 @@
 package steps;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -7,6 +9,9 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.testng.Assert;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,21 +19,14 @@ public class Booking {
 
     Response response;
     Map<String, Object> requestDetails;
+    String dataPath = Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "Data", "Data.json").toString();
 
     @Given("I have valid booking details")
-    public void iHaveValidBookingDetails() {
+    public void iHaveValidBookingDetails() throws IOException {
         requestDetails = new HashMap<>();
-        requestDetails.put("firstname", "Mohamed");
-        requestDetails.put("lastname", "Elmaadawy");
-        requestDetails.put("totalprice", 395);
-        requestDetails.put("depositpaid", true);
-
-        Map<String, String> bookingDates = new HashMap<>();
-        bookingDates.put("checkin", "2024-08-11");
-        bookingDates.put("checkout", "2024-08-18");
-        requestDetails.put("bookingdates", bookingDates);
-
-        requestDetails.put("additionalneeds", "No additional need :)");
+        ObjectMapper objectMapper = new ObjectMapper();
+        requestDetails = objectMapper.readValue(new File(dataPath), new TypeReference<HashMap<String, Object>>() {});
+        System.out.println("Request: " + requestDetails);
     }
 
     @When("I send the booking POST request")
@@ -49,11 +47,18 @@ public class Booking {
     public void theResponseShouldMatchTheRequest() {
         Map<String, Object> bookingResponse = response.jsonPath().getMap("booking");
 
+
         Assert.assertEquals(bookingResponse.get("firstname"), requestDetails.get("firstname"));
         Assert.assertEquals(bookingResponse.get("lastname"), requestDetails.get("lastname"));
         Assert.assertEquals(bookingResponse.get("totalprice"), requestDetails.get("totalprice"));
         Assert.assertEquals(bookingResponse.get("depositpaid"), requestDetails.get("depositpaid"));
         Assert.assertEquals(bookingResponse.get("additionalneeds"), requestDetails.get("additionalneeds"));
+
+        Map<String, String> bookingDatesResponse = (Map<String, String>) bookingResponse.get("bookingdates");
+        Map<String, String> bookingDatesRequest = (Map<String, String>) requestDetails.get("bookingdates");
+
+        Assert.assertEquals(bookingDatesResponse.get("checkin"), bookingDatesRequest.get("checkin"));
+        Assert.assertEquals(bookingDatesResponse.get("checkout"), bookingDatesRequest.get("checkout"));
 
 
     }
